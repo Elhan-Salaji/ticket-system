@@ -1,0 +1,22 @@
+### Ticket erstellen
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "title": "Drucker geht nicht",
+  "description": "Papierstau im 2. OG"
+}
+
+### Ticket erstellen ohne Titel, sollte 400 geben
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "description": "Kein Titel angegeben"
+}
+
+### Ticket mit ID 1 abrufen
+GET http://localhost:8080/api/tickets/1
+
+### Ticket mit ID 999 abrufen, sollte 404 geben
+GET http://localhost:8080/api/tickets/999
