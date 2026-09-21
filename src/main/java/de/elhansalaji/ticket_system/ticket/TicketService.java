@@ -1,6 +1,9 @@
 package de.elhansalaji.ticket_system.ticket;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -22,5 +25,9 @@ public class TicketService {
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
+    }
+    // Methode zum Abrufen aller Tickets, neueste zuerst (höchste ID zuerst)
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 }

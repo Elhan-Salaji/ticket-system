@@ -7,7 +7,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,5 +84,38 @@ class TicketServiceTest {
         assertThatThrownBy(() -> ticketService.getTicketById(42L))
                 .isInstanceOf(TicketNotFoundException.class)
                 .hasMessage("Ticket mit ID 42 wurde nicht gefunden");
+    }
+
+    @Test
+    @DisplayName("getAllTickets fragt das Repository absteigend nach ID sortiert ab")
+    void getAllTicketsSortsByIdDescending() {
+        when(ticketRepository.findAll(any(Sort.class))).thenReturn(List.of());
+
+        ticketService.getAllTickets();
+
+        ArgumentCaptor<Sort> captor = ArgumentCaptor.forClass(Sort.class);
+        verify(ticketRepository).findAll(captor.capture());
+        assertThat(captor.getValue()).isEqualTo(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    @Test
+    @DisplayName("getAllTickets gibt die Tickets des Repositories zurück")
+    void getAllTicketsReturnsRepositoryResult() {
+        List<Ticket> tickets = List.of(
+                new Ticket("Drucker defekt", null),
+                new Ticket("Monitor flackert", null));
+        when(ticketRepository.findAll(any(Sort.class))).thenReturn(tickets);
+
+        List<Ticket> result = ticketService.getAllTickets();
+
+        assertThat(result).isSameAs(tickets);
+    }
+
+    @Test
+    @DisplayName("getAllTickets gibt eine leere Liste zurück, wenn es keine Tickets gibt")
+    void getAllTicketsReturnsEmptyListWhenNoTickets() {
+        when(ticketRepository.findAll(any(Sort.class))).thenReturn(List.of());
+
+        assertThat(ticketService.getAllTickets()).isEmpty();
     }
 }
