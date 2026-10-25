@@ -20,3 +20,6 @@ GET http://localhost:8080/api/tickets/1
 
 ### Ticket mit ID 999 abrufen, sollte 404 geben
 GET http://localhost:8080/api/tickets/999
+
+### Alle Tickets abrufen, aufsteigend nach ID sortiert
+GET http://localhost:8080/api/tickets
