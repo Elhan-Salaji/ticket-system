@@ -36,6 +36,7 @@ Kleines Ticketsystem für Support-Anfragen, gebaut mit Java und Spring Boot.
 | Methode | Endpunkt | Beschreibung |
 |---|---|---|
 | POST | /api/tickets | Neues Ticket anlegen |
+| GET | /api/tickets | Alle Tickets abrufen, aufsteigend nach ID sortiert |
 | GET | /api/tickets/{id} | Ticket per ID abrufen |
 
 Beispielanfragen liegen in `requests.http`.

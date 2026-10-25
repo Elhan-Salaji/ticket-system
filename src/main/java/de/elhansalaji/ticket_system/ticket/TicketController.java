@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
@@ -25,5 +27,14 @@ public class TicketController {
     public ResponseEntity<TicketResponse> getTicket(@PathVariable Long id) {
         Ticket ticket = ticketService.getTicketById(id);
         return ResponseEntity.ok(TicketResponse.fromEntity(ticket));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TicketResponse>> getAllTickets() {
+        List<TicketResponse> tickets = ticketService.getAllTickets()
+                .stream()
+                .map(TicketResponse::fromEntity)
+                .toList();
+        return ResponseEntity.ok(tickets);
     }
 }
