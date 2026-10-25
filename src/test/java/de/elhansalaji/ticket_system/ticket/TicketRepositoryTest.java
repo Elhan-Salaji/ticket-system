@@ -9,6 +9,9 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -86,5 +89,27 @@ class TicketRepositoryTest {
 
         assertThatThrownBy(() -> ticketRepository.saveAndFlush(new Ticket("Zu lange Beschreibung", description)))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    @DisplayName("findAll mit Sortierung liefert alle Tickets aufsteigend nach ID")
+    void findAllSortedByIdAscending() {
+        Ticket first = ticketRepository.save(new Ticket("Drucker defekt", null));
+        Ticket second = ticketRepository.save(new Ticket("Monitor flackert", null));
+        Ticket third = ticketRepository.save(new Ticket("WLAN langsam", null));
+        entityManager.flush();
+        entityManager.clear();
+
+        List<Ticket> tickets = ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+
+        assertThat(tickets)
+                .extracting(Ticket::getId)
+                .containsExactly(first.getId(), second.getId(), third.getId());
+    }
+
+    @Test
+    @DisplayName("findAll liefert eine leere Liste, wenn keine Tickets gespeichert sind")
+    void findAllWithoutTickets() {
+        assertThat(ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).isEmpty();
     }
 }
