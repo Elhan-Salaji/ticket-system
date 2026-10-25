@@ -87,15 +87,15 @@ class TicketServiceTest {
     }
 
     @Test
-    @DisplayName("getAllTickets fragt das Repository absteigend nach ID sortiert ab")
-    void getAllTicketsSortsByIdDescending() {
+    @DisplayName("getAllTickets fragt das Repository aufsteigend nach ID sortiert ab")
+    void getAllTicketsSortsByIdAscending() {
         when(ticketRepository.findAll(any(Sort.class))).thenReturn(List.of());
 
         ticketService.getAllTickets();
 
         ArgumentCaptor<Sort> captor = ArgumentCaptor.forClass(Sort.class);
         verify(ticketRepository).findAll(captor.capture());
-        assertThat(captor.getValue()).isEqualTo(Sort.by(Sort.Direction.DESC, "id"));
+        assertThat(captor.getValue()).isEqualTo(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Test

@@ -26,8 +26,9 @@ public class TicketService {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
     }
-    // Methode zum Abrufen aller Tickets, neueste zuerst (höchste ID zuerst)
+
+    // Methode zum Abrufen aller Tickets, aufsteigend nach ID sortiert
     public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return ticketRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 }
